@@ -284,6 +284,79 @@
       place-items: center;
     }
 
+    .deathmatch-panel {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .timer-box {
+      text-align: center;
+      font-size: 0.98rem;
+      color: var(--muted);
+    }
+
+    .timer-box strong {
+      color: #ffffff;
+      font-size: 1.35rem;
+      text-shadow: 0 0 0.5rem rgba(0, 183, 255, 0.5);
+      margin-left: 6px;
+    }
+
+    .timer-track {
+      width: 100%;
+      height: 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .timer-fill {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-blue), var(--danger));
+      transition: width 1s linear;
+    }
+
+    .death-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .danger-btn {
+      border: 0;
+      border-radius: 16px;
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(120deg, #ff3f6c, #ff6a3a);
+      box-shadow: 0 10px 22px rgba(255, 77, 126, 0.4);
+      transition: transform 180ms ease, filter 180ms ease;
+    }
+
+    .danger-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .danger-btn:active {
+      transform: translateY(1px);
+    }
+
+    .penalty-text {
+      margin: 0;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #ffdbe6;
+      min-height: 1.3rem;
+    }
+
     .card {
       min-height: 230px;
       border-radius: var(--radius);
@@ -405,6 +478,10 @@
             Nivel 3: Fuego Cruzado
             <span>Verdad o trago grande en preguntas personales.</span>
           </button>
+          <button class="level-btn" data-level="4" role="listitem" disabled>
+            Nivel 4: Muerte Subita
+            <span>Categoria random, reloj de 10s y castigo al perder.</span>
+          </button>
         </div>
 
         <p class="warning">Sin retos fisicos y sin exponer celulares. Solo platica, risas y tragos responsables.</p>
@@ -428,6 +505,17 @@
         <div class="footer-actions">
           <button class="action-btn" id="nextBtn">Siguiente Trago</button>
           <button class="ghost-btn" id="backBtn">Cambiar Nivel</button>
+        </div>
+
+        <div class="deathmatch-panel" id="deathMatchPanel" hidden>
+          <div class="timer-box">Tiempo restante:<strong id="timerValue">10</strong>s</div>
+          <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+          <div class="death-actions">
+            <button class="action-btn" id="startTimerBtn">Iniciar Reloj</button>
+            <button class="danger-btn" id="loseBtn">Perdi</button>
+          </div>
+          <button class="ghost-btn" id="nextCategoryBtn">Nueva Categoria</button>
+          <p class="penalty-text" id="castigoTexto"></p>
         </div>
 
         <p class="warning">Si una pregunta incomoda, se cambia sin drama. La meta es conocerse mejor y pasarla bien.</p>
@@ -603,13 +691,95 @@
       "Verdad o trago: que parte de tu pasado aun te cuesta contar sin bromear.",
       "Verdad o trago: que te da mas miedo mostrar, tristeza, enojo o vulnerabilidad.",
       "Verdad o trago: en que area de tu vida sientes que todos avanzan menos tu.",
-      "Verdad o trago: que necesitas escuchar hoy pero no te atreves a pedir."
+      "Verdad o trago: que necesitas escuchar hoy pero no te atreves a pedir.",
+      "Verdad o trago: cual fue la pelea de pareja mas absurda que aun te da pena recordar.",
+      "Verdad o trago: que inseguridad te prende los celos aunque digas que no.",
+      "Verdad o trago: cuando fue la ultima vez que revisaste de mas una situacion por desconfianza.",
+      "Verdad o trago: que mentira dijiste en una relacion para evitar discutir.",
+      "Verdad o trago: cual fue tu peor escena de celos y como termino.",
+      "Verdad o trago: que red flag de pareja toleraste por miedo a quedarte solo.",
+      "Verdad o trago: que parte toxica de ti aparece cuando te sientes ignorado.",
+      "Verdad o trago: cual ha sido tu peor ghosteo y que excusa te diste.",
+      "Verdad o trago: que promesa de amor rompiste aunque juraste cumplirla.",
+      "Verdad o trago: que te dolio mas, una infidelidad real o una traicion de confianza.",
+      "Verdad o trago: cual fue la vez que borraste algo importante por error y casi te da algo.",
+      "Verdad o trago: que hiciste cuando tronaste una base de datos y tocaba entregar al dia siguiente.",
+      "Verdad o trago: cual fue tu peor pretexto cuando no entendias nada de un proyecto de programacion.",
+      "Verdad o trago: alguna vez vendiste humo en una demo para que no notaran que no corria bien.",
+      "Verdad o trago: que parte de codigo copiaste sin entender y rezaste para que funcionara.",
+      "Verdad o trago: cual fue tu mayor panico en estadia, memoria o residencia profesional.",
+      "Verdad o trago: que mentira tecnica dijiste para cubrir un bug que no sabias arreglar.",
+      "Verdad o trago: que error cometiste en un bot o app y fingiste que era feature.",
+      "Verdad o trago: cual ha sido tu peor noche de crisis por no respaldar un avance.",
+      "Verdad o trago: que tan seguido te comparas con quien parece dominar todo en TI.",
+      "Verdad o trago: que fue lo mas riesgoso que hiciste por no reprobar una materia de programacion.",
+      "Verdad o trago: cual fue tu mayor acto de necedad en una discusion de pareja.",
+      "Verdad o trago: que te da mas miedo en pareja, aburrirte o no ser suficiente.",
+      "Verdad o trago: que batalla emocional escondes detras de tus chistes en peda.",
+      "Verdad o trago: en que momento sentiste que tu futuro en tecnologia se te iba de las manos.",
+      "Verdad o trago: que parte de tu historia amorosa te sigue dando coraje contigo mismo.",
+      "Verdad o trago: cual ha sido tu peor decision por orgullo en pleno conflicto.",
+      "Verdad o trago: que verdad no has dicho por miedo a que cambie todo.",
+      "Verdad o trago: que culpa cargas desde un error academico o laboral y aun no sueltas.",
+      "Verdad o trago: que inseguridad te pega cuando alguien te gusta de verdad."
+    ];
+
+    const categoriasMuerteSubita = [
+      "Cartas de Clash Royale",
+      "Canciones de Peso Pluma o Natanael Cano",
+      "Excusas para no entregar un proyecto de programacion",
+      "Cosas que haces cuando estas borracho",
+      "Marcas de cerveza",
+      "Equipos de la Liga MX que dan lastima",
+      "Materias de ingenieria que quitan el sueno",
+      "Toppings para unos tacos de madrugada",
+      "Razones para pedir otra ronda",
+      "Profesores tipo de la uni",
+      "Errores clasicos en codigo",
+      "Comidas para curar la cruda",
+      "Apps que todos usan diario",
+      "Banderas rojas en una cita",
+      "Canciones que todos corean en peda",
+      "Pretextos para llegar tarde",
+      "Cosas que se olvidan en una fiesta",
+      "Tipos de companeros en equipo",
+      "Formas de gastar la quincena rapido",
+      "Memes o frases virales mexicanas",
+      "Bebidas que mezclas y luego te arrepientes",
+      "Excusas para no ir al gym",
+      "Cosas que no faltan en una peda casera",
+      "Errores al hacer presentaciones",
+      "Animes o series populares",
+      "Comandos o palabras de programacion",
+      "Lugares comunes para primera cita",
+      "Motivos para cancelar plan",
+      "Canciones de Marca MP o Gabito Ballesteros",
+      "Apps de comida",
+      "Sabores de papas o botanas",
+      "Fobias o miedos raros",
+      "Objetos que siempre se pierden",
+      "Palabras que dices en pleno estres",
+      "Jugadores famosos de la Liga MX"
+    ];
+
+    const castigosMuerteSubita = [
+      "Castigo: toma 2 tragos.",
+      "Castigo: toma un shot completo.",
+      "Castigo: dale tu bebida al otro por 1 turno.",
+      "Castigo: 3 tragos pequenos sin pausa.",
+      "Castigo: el otro jugador elige tu siguiente trago.",
+      "Castigo: toma 2 y sirve 1 al rival.",
+      "Castigo: shot y cambian de lugar la siguiente ronda.",
+      "Castigo: te toca abrir la siguiente bebida.",
+      "Castigo: un trago largo de 5 segundos.",
+      "Castigo: brindis obligatorio y 2 tragos."
     ];
 
     const reglasPorNivel = {
       1: "Nivel 1: Debate o pregunta ligera. Quien pierda el debate o se trabe, toma 1.",
       2: "Nivel 2: Persona A lee, Persona B adivina. Si falla B, toma B. Si acierta B, toma A.",
-      3: "Nivel 3: Persona que responde elige: decir la verdad completa o tomar un trago grande."
+      3: "Nivel 3: Persona que responde elige: decir la verdad completa o tomar un trago grande.",
+      4: "Nivel 4: Digan palabras de la categoria por turnos. Si alguien se traba o repite, pierde."
     };
 
     const gameData = {
@@ -624,6 +794,10 @@
       3: {
         name: "Fuego Cruzado",
         cards: nuevasPreguntasNivel3
+      },
+      4: {
+        name: "Muerte Subita",
+        cards: []
       }
     };
 
@@ -641,12 +815,22 @@
     const playerTwoInput = document.getElementById("playerTwoInput");
     const nameHelper = document.getElementById("nameHelper");
     const turnBanner = document.getElementById("turnBanner");
+    const deathMatchPanel = document.getElementById("deathMatchPanel");
+    const timerValue = document.getElementById("timerValue");
+    const timerFill = document.getElementById("timerFill");
+    const startTimerBtn = document.getElementById("startTimerBtn");
+    const loseBtn = document.getElementById("loseBtn");
+    const nextCategoryBtn = document.getElementById("nextCategoryBtn");
+    const castigoTexto = document.getElementById("castigoTexto");
 
     let selectedLevel = null;
     let turnCount = 0;
     let lastCardIndex = -1;
     let players = ["Jugador 1", "Jugador 2"];
     let currentTurnIndex = 0;
+    let deathMatchLastCategoryIndex = -1;
+    let deathMatchTimerId = null;
+    let deathMatchTimeLeft = 10;
 
     function sanitizeName(value, fallback) {
       const clean = value.trim().replace(/\s+/g, " ");
@@ -689,6 +873,62 @@
       return index;
     }
 
+    function resetDeathMatchTimer() {
+      if (deathMatchTimerId) {
+        clearInterval(deathMatchTimerId);
+        deathMatchTimerId = null;
+      }
+      deathMatchTimeLeft = 10;
+      timerValue.textContent = String(deathMatchTimeLeft);
+      timerFill.style.width = "100%";
+      startTimerBtn.textContent = "Iniciar Reloj";
+    }
+
+    function startDeathMatchTimer() {
+      if (deathMatchTimerId) return;
+      resetDeathMatchTimer();
+      startTimerBtn.textContent = "Corriendo...";
+
+      deathMatchTimerId = setInterval(() => {
+        deathMatchTimeLeft -= 1;
+        timerValue.textContent = String(Math.max(0, deathMatchTimeLeft));
+        timerFill.style.width = Math.max(0, deathMatchTimeLeft * 10) + "%";
+
+        if (deathMatchTimeLeft <= 0) {
+          clearInterval(deathMatchTimerId);
+          deathMatchTimerId = null;
+          startTimerBtn.textContent = "Reiniciar Reloj";
+          alert("Tiempo agotado. Si alguien se trabo o repitio, le toca castigo.");
+        }
+      }, 1000);
+    }
+
+    function nextDeathMatchCategory() {
+      const idx = randomIndex(categoriasMuerteSubita.length, deathMatchLastCategoryIndex);
+      deathMatchLastCategoryIndex = idx;
+      turnCount += 1;
+      counterChip.textContent = "Ronda #" + turnCount;
+      turnBanner.textContent = "Duelo: " + players[0] + " vs " + players[1];
+      animateCard("Categoria: " + categoriasMuerteSubita[idx]);
+      castigoTexto.textContent = "";
+      resetDeathMatchTimer();
+    }
+
+    function showRandomPenalty() {
+      const idx = Math.floor(Math.random() * castigosMuerteSubita.length);
+      const penalty = castigosMuerteSubita[idx];
+      castigoTexto.textContent = penalty;
+      alert(penalty);
+    }
+
+    function updateLevelUI(level) {
+      const isDeathMatch = level === "4";
+      deathMatchPanel.hidden = !isDeathMatch;
+      nextBtn.style.display = isDeathMatch ? "none" : "block";
+      counterChip.textContent = isDeathMatch ? "Ronda #0" : "Reto #1";
+      turnBanner.style.display = "grid";
+    }
+
     function setScreen(showGame) {
       startScreen.classList.toggle("active", !showGame);
       gameScreen.classList.toggle("active", showGame);
@@ -705,6 +945,11 @@
     }
 
     function nextCard() {
+      if (selectedLevel === "4") {
+        nextDeathMatchCategory();
+        return;
+      }
+
       const levelPack = gameData[selectedLevel];
       if (!levelPack) return;
 
@@ -725,11 +970,18 @@
       selectedLevel = level;
       turnCount = 0;
       lastCardIndex = -1;
+      deathMatchLastCategoryIndex = -1;
       currentTurnIndex = Math.floor(Math.random() * 2);
       levelChip.textContent = "Nivel seleccionado: " + gameData[level].name;
       modoDescripcion.textContent = reglasPorNivel[level];
+      updateLevelUI(level);
       setScreen(true);
-      nextCard();
+
+      if (level === "4") {
+        nextDeathMatchCategory();
+      } else {
+        nextCard();
+      }
     }
 
     playerOneInput.addEventListener("input", updateLevelButtonsState);
@@ -746,8 +998,12 @@
     });
 
     nextBtn.addEventListener("click", nextCard);
+    startTimerBtn.addEventListener("click", startDeathMatchTimer);
+    loseBtn.addEventListener("click", showRandomPenalty);
+    nextCategoryBtn.addEventListener("click", nextDeathMatchCategory);
 
     backBtn.addEventListener("click", () => {
+      resetDeathMatchTimer();
       setScreen(false);
     });
 
