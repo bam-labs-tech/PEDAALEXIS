@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PEDA NIGHT - Juego para Pedas</title>
-  <meta name="description" content="Juego web interactivo para beber en fiestas con tres niveles de intensidad." />
+  <title>DUO TRAGOS - 1 vs 1</title>
+  <meta name="description" content="Juego web de beber para 2 personas con tres niveles de intensidad." />
   <style>
     :root {
       --bg-1: #06080f;
@@ -144,6 +144,55 @@
       margin-top: 14px;
     }
 
+    .players {
+      display: grid;
+      gap: 10px;
+      margin: 10px 0 8px;
+    }
+
+    .name-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .name-field label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .name-field input {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 183, 255, 0.35);
+      background: rgba(5, 11, 26, 0.92);
+      color: var(--text);
+      padding: 13px 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+      box-shadow: inset 0 0 0.5rem rgba(176, 38, 255, 0.15);
+    }
+
+    .name-field input::placeholder {
+      color: #7f93bc;
+    }
+
+    .name-field input:focus {
+      border-color: rgba(57, 255, 135, 0.8);
+      box-shadow: 0 0 0.45rem rgba(57, 255, 135, 0.45), 0 0 0.9rem rgba(0, 183, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .helper {
+      margin: 4px 0 2px;
+      font-size: 0.79rem;
+      color: #9fadd0;
+      min-height: 1.1rem;
+    }
+
     .level-btn,
     .action-btn,
     .ghost-btn {
@@ -162,6 +211,13 @@
       text-align: left;
       background: linear-gradient(120deg, rgba(176, 38, 255, 0.76), rgba(0, 183, 255, 0.72));
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .level-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      filter: grayscale(0.2);
+      transform: none;
     }
 
     .level-btn span {
@@ -209,6 +265,23 @@
     .card-wrap {
       perspective: 1100px;
       margin: 10px 0 14px;
+    }
+
+    .turn-banner {
+      margin-bottom: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(57, 255, 135, 0.45);
+      background: linear-gradient(125deg, rgba(57, 255, 135, 0.15), rgba(0, 183, 255, 0.12));
+      text-align: center;
+      font-size: clamp(1rem, 4.2vw, 1.3rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 0.5rem rgba(57, 255, 135, 0.45);
+      color: #d9ffea;
+      min-height: 2.5rem;
+      display: grid;
+      place-items: center;
     }
 
     .card {
@@ -275,6 +348,10 @@
         padding: 26px;
       }
 
+      .players {
+        grid-template-columns: 1fr 1fr;
+      }
+
       .footer-actions {
         grid-template-columns: 2fr 1fr;
       }
@@ -298,26 +375,39 @@
     <section class="panel" aria-live="polite">
       <section id="startScreen" class="screen active" aria-labelledby="titulo-principal">
         <header>
-          <h1 id="titulo-principal">PEDA NIGHT</h1>
-          <p class="subtitle">Elige tu nivel y prepárate para el caos social.</p>
+          <h1 id="titulo-principal">DUO TRAGOS</h1>
+          <p class="subtitle">Juego para 2 personas. Elijan nivel y arranca la carrilla.</p>
         </header>
 
+        <div class="players" aria-label="Nombres de jugadores">
+          <div class="name-field">
+            <label for="playerOneInput">Jugador 1</label>
+            <input id="playerOneInput" name="playerOne" type="text" maxlength="22" autocomplete="off" placeholder="Ej. Ana" />
+          </div>
+          <div class="name-field">
+            <label for="playerTwoInput">Jugador 2</label>
+            <input id="playerTwoInput" name="playerTwo" type="text" maxlength="22" autocomplete="off" placeholder="Ej. Diego" />
+          </div>
+        </div>
+
+        <p class="helper" id="nameHelper">Escribe ambos nombres para desbloquear niveles.</p>
+
         <div class="levels" role="list" aria-label="Niveles de intensidad">
-          <button class="level-btn" data-level="1" role="listitem">
-            Nivel 1: Precopeo (Tranquilo)
-            <span>Hielo, risas y verdades leves para arrancar.</span>
+          <button class="level-btn" data-level="1" role="listitem" disabled>
+            Nivel 1: Calentando Motores
+            <span>Debates rapidos, cultura pop y preguntas ligeras.</span>
           </button>
-          <button class="level-btn" data-level="2" role="listitem">
-            Nivel 2: Entrando en Calor (Intermedio)
-            <span>Yo nunca nunca, votaciones y mini reglas.</span>
+          <button class="level-btn" data-level="2" role="listitem" disabled>
+            Nivel 2: Que Tanto Me Conoces
+            <span>Uno pregunta, el otro adivina. Si falla toma.</span>
           </button>
-          <button class="level-btn" data-level="3" role="listitem">
-            Nivel 3: Modo Destrucción (Pesado)
-            <span>Retos atrevidos, shots y exposición total.</span>
+          <button class="level-btn" data-level="3" role="listitem" disabled>
+            Nivel 3: Fuego Cruzado
+            <span>Verdad o trago grande en preguntas personales.</span>
           </button>
         </div>
 
-        <p class="warning">Juega con responsabilidad. Si alguien no quiere hacer un reto, se respeta.</p>
+        <p class="warning">Sin retos fisicos y sin exponer celulares. Solo platica, risas y tragos responsables.</p>
       </section>
 
       <section id="gameScreen" class="screen" aria-labelledby="nivel-actual" aria-hidden="true">
@@ -326,7 +416,10 @@
           <div class="chip" id="contador">Reto #1</div>
         </div>
 
+        <div class="chip" id="modoDescripcion">Regla del nivel: -</div>
+
         <div class="card-wrap">
+          <div class="turn-banner" id="turnBanner">Turno de: -</div>
           <article class="card" id="retoCard">
             <p id="retoTexto">Tu reto aparecerá aquí.</p>
           </article>
@@ -337,136 +430,109 @@
           <button class="ghost-btn" id="backBtn">Cambiar Nivel</button>
         </div>
 
-        <p class="warning">Si un reto rompe límites personales, cámbialo sin presión. La idea es divertirse.</p>
+        <p class="warning">Si una pregunta incomoda, se cambia sin drama. La meta es conocerse mejor y pasarla bien.</p>
       </section>
     </section>
   </main>
 
   <script>
-    // Reemplaza tus arreglos antiguos con estos nuevos masivos
+    // Base de datos 1 vs 1
     const nuevasPreguntasNivel1 = [
-      "Probabilidades del 1 al 10: que hoy alguien diga 'ya me voy' y se quede dos horas mas.",
-      "Rompehielo: cual fue la materia mas inutil que llevaste en la uni, pero pasaste de milagro.",
-      "Cultura pop: menciona 3 canciones de Peso Pluma en menos de 8 segundos o toma 1 trago.",
-      "Debate express: tacos de asada o pastor para bajon de peda, convence al grupo en 20 segundos.",
-      "Verdad leve: que red flag tuya descubrieron tus amigos antes que tu.",
-      "Probabilidades: que te hayas enamorado de alguien solo porque te respondio rapido.",
-      "Cultura general: en que ano empezo la pandemia en Mexico, sin google. Si fallas, trago.",
-      "Rompehielo: cuenta tu peor excusa para llegar tarde a clase.",
-      "Debate universitario: examen final en equipo o tesis individual, que da mas miedo.",
-      "Cultura pop: di 2 canciones de Junior H y 2 de Fuerza Regida; si te trabas, trago.",
-      "Verdad leve: cual fue tu gasto mas no mames en una peda reciente.",
-      "Probabilidades: que hoy se arme plan post-peda de tacos a las 3 a.m.",
-      "Cultura general: cual es la capital de Jalisco. Si no sabes, trago con humildad.",
-      "Rompehielo: que apodo te pusieron en prepa/uni y por que.",
-      "Debate: team reggaeton viejo o corridos tumbados para arrancar la fiesta.",
-      "Verdad leve: que mentira blanca dices para cancelar planes.",
-      "Probabilidades: que alguien aqui aun deba copias, pasajes o una tanda.",
-      "Cultura pop: menciona 3 memes clasicos mexicanos que sigan vivos.",
-      "Rompehielo: describe tu cruda ideal con solo 3 palabras.",
-      "Debate: cafe para sobrevivir clases de 7 a.m. o desvelo con energia de fe.",
-      "Verdad leve: cual fue tu peor decision academica por flojera.",
-      "Probabilidades: que alguien aqui haya llorado por una cancion de reggaeton.",
-      "Cultura general: cuantos estados tiene Mexico. Si fallas, 1 trago.",
-      "Rompehielo: que carrera habrias elegido si el dinero no importara.",
-      "Debate: quien miente mas, el profe con el 'es facil' o el compa con 'ya casi termino'.",
-      "Verdad leve: que habito tuyo te delata cuando ya andas medio happy.",
-      "Probabilidades: que alguien se quede dormido viendo una serie y diga que 'si la vio'.",
-      "Cultura pop: menciona una pelicula mexicana que todos deban ver minimo una vez.",
-      "Rompehielo: si tu semestre fuera una cancion, cual seria y por que.",
-      "Debate: mejor plan de viernes, antro caro o casa con bocina y buena carrilla.",
-      "Verdad leve: cual fue tu peor compra en una app de delivery con hambre de madrugada.",
-      "Probabilidades: que alguien hoy se confunda de nombre contando un chisme.",
-      "Cultura general: quien pinto la Mona Lisa. Si te equivocas, trago artistico."
+      "Debate relampago: toma quien prefiera calor infernal antes que frio de sueter doble.",
+      "Cultura pop: nombra 2 canciones de Natanael Cano; si no puedes, tomas.",
+      "Toma quien crea que dormir 4 horas antes de examen de ingenieria 'si funciona'.",
+      "Debate: Cruz Azul o Santos Laguna, quien sufre mas cada torneo. Toma quien pierda la discusion.",
+      "Pregunta ligera: cual fue tu materia mas pesada del semestre pasado. Si dices 'todas', tomas.",
+      "Toma quien tenga mas capturas mentales de momentos cringe en la uni.",
+      "Cultura general pop: di 3 artistas de corridos tumbados en 7 segundos o toma.",
+      "Debate rapido: proyecto final en equipo o examen final sorpresa, que da mas ansiedad.",
+      "Toma quien haya dicho 'ya casi acabo' y aun le faltaban 4 horas de proyecto.",
+      "Pregunta ligera: cual fue tu peor desvelo por tarea y que materia era.",
+      "Debate: Marca MP para manejar de noche o reggaeton para precopeo. Pierde y toma.",
+      "Toma quien gaste mas en cafe que en agua durante semanas de entregas.",
+      "Cultura pop: menciona una cancion de Gabito Ballesteros y una de Peso Pluma, si fallas tomas.",
+      "Debate: mejor plan de viernes, maraton de memes o bar con musica en vivo.",
+      "Toma quien crea que aun puede titularse sin sufrir tantito.",
+      "Pregunta ligera: que comida salva tu cruda sin fallar.",
+      "Debate futbolero: quien tiene aficion mas resiliente, Cruz Azul o Santos. El que no convenza toma.",
+      "Toma quien haya hecho tarea con tutorial a 2x y fe en Dios.",
+      "Cultura general: cuantos estados tiene Mexico. Si fallan ambos, toman ambos.",
+      "Debate: playlist para estudiar, lo-fi o corridos tumbados bajito.",
+      "Toma quien haya comprado algo inutil en oferta solo por ansiedad de finales.",
+      "Pregunta ligera: cual serie te arruino el horario de sueno en epoca de examenes."
     ];
 
     const nuevasPreguntasNivel2 = [
-      "Yo nunca nunca: he copiado en un examen y luego saque mejor calificacion que el que estudio.",
-      "Yo nunca nunca: he dicho 'ya casi llego' cuando ni me habia metido a banar.",
-      "Yo nunca nunca: me hice el dormido para no contestar un problema.",
-      "Votacion: quien es mas probable que sobreviva una semana con 200 pesos.",
-      "Votacion: quien es mas probable que se enamore por una playlist bien hecha.",
-      "Regla temporal (3 rondas): queda prohibido decir 'no mames'; quien lo diga toma 1.",
-      "Yo nunca nunca: he vuelto con alguien sabiendo perfectamente que era mala idea.",
-      "Votacion: quien seria el primero en renunciar si le piden tesis + practicas + vida social.",
-      "Regla temporal (2 rondas): todo comentario debe empezar con 'profesor, con todo respeto...'. Si no, trago.",
-      "Yo nunca nunca: me hice amigo de alguien solo para pasar una materia.",
-      "Votacion: quien da la mejor carrilla sin que se note mala vibra.",
-      "Regla temporal (3 rondas): no se puede decir 'guey'; quien lo diga toma y explica su punto formalmente.",
-      "Yo nunca nunca: he fingido entender un tema para no quedar como perdido.",
-      "Votacion: quien tiene mas chance de caer en estafa por promo demasiado buena.",
-      "Debate rapido: es peor ghostear o responder cada 8 horas con un 'jajaja'.",
-      "Yo nunca nunca: he prometido 'solo una chela' y acabe viendo el amanecer.",
-      "Votacion: quien tiene mas talento para inventar pretextos creibles.",
-      "Regla temporal (2 rondas): no se puede usar ingles; cada anglicismo cuesta 1 trago.",
-      "Yo nunca nunca: he ignorado red flags por pura necedad.",
-      "Votacion: quien seria mas probable en perderse en un festival por ir por agua.",
-      "Regla temporal (3 rondas): si alguien dice 'literal', toma 1.",
-      "Yo nunca nunca: he hecho tarea cinco minutos antes de subirla.",
-      "Votacion: quien pisaria el palito de un ex con solo un 'hola perdida/o'.",
-      "Debate: que pesa mas en una relacion, responsabilidad afectiva o buen sentido del humor.",
-      "Yo nunca nunca: he dado consejo amoroso que yo mismo no aplico.",
-      "Votacion: quien seria mas probable en ser influencer accidental por un video random.",
-      "Regla temporal (3 rondas): cada frase debe terminar con 'confirmo'; si no, trago.",
-      "Yo nunca nunca: he culpado al trafico cuando en realidad sali tardisimo.",
-      "Votacion: quien tiene el peor historial de deudas chiquitas tipo 'te pago al rato'.",
-      "Debate universitario: examen sorpresa o exposicion improvisada, que trauma mas.",
-      "Yo nunca nunca: he stalkeado tanto que ya sabia horarios, gustos y cafeteria favorita.",
-      "Votacion: quien es mas probable que arme peda un martes y aun asi vaya a clase.",
-      "Regla temporal (2 rondas): no se puede decir 'yo'; quien lo diga toma 1.",
-      "Yo nunca nunca: he defendido una cancion malisima solo por nostalgia.",
-      "Votacion: quien seria mas probable en ganar 'MasterChef de recalentado'."
+      "Adivina: cual es mi comida favorita para sobrevivir semana de entregas.",
+      "Adivina: que cancion pongo primero cuando ya estoy en mood de peda.",
+      "Adivina: que materia me hizo dudar de mi carrera por primera vez.",
+      "Adivina: cual es mi equipo de Liga MX menos odiado.",
+      "Adivina: cual fue mi peor horario de clases en la uni.",
+      "Adivina: prefiero corridos tumbados o reggaeton para manejar de noche.",
+      "Adivina: que me estresa mas, exposicion final o examen sorpresa.",
+      "Adivina: mi bebida favorita en antro/bar sin pensarla mucho.",
+      "Adivina: que app uso mas cuando deberia estar estudiando.",
+      "Adivina: cual es mi red flag mas evidente en relaciones.",
+      "Adivina: que artista me levanta el animo en dia pesado, Marca MP, Gabito o Nata.",
+      "Adivina: que tipo de profe me cae peor, barco falso o estricto sin rubrica.",
+      "Adivina: cual es mi excusa clasica cuando voy tarde.",
+      "Adivina: cual es mi plan ideal de domingo de cruda.",
+      "Adivina: que gasto impulsivo hago mas seguido.",
+      "Adivina: cual fue mi peor oso academico sin necesidad de detalles.",
+      "Adivina: en que horario rindo mas para estudiar, madrugada o manana.",
+      "Adivina: prefiero playa caliente o bosque frio para vacacion corta.",
+      "Adivina: que meme/frase digo cuando todo sale mal en proyectos.",
+      "Adivina: que comida no perdonaria que no hubiera en una peda casera.",
+      "Adivina: cual seria mi primer compra si me cae dinero extra hoy.",
+      "Adivina: que me duele mas, perder tiempo o perder dinero.",
+      "Adivina: cual es mi cancion culposa que nunca salto.",
+      "Adivina: que prefiero para cita tranquila, cafe largo o cena tardia."
     ];
 
     const nuevasPreguntasNivel3 = [
-      "Confesion pesada: cual es la mentira mas grande que dijiste para evitar una conversacion incomoda.",
-      "Verdad pesada: que patron toxico repites aunque sabes que te hace dano.",
-      "Castigo: si no respondes con honestidad, toma 2 tragos y cedes el turno.",
-      "Confesion: cuando fue la ultima vez que te sentiste estancado en la vida y por que.",
-      "Verdad pesada: cual es tu mayor inseguridad en relaciones y como te afecta.",
-      "Castigo de sinceridad: responde en menos de 10 segundos o shot completo.",
-      "Confesion: que decision te sigue pesando de tu etapa universitaria.",
-      "Verdad pesada: a quien le debes una disculpa real y por que no la has dado.",
-      "Castigo: si das respuesta vaga tipo 'no se', toma 2 tragos.",
-      "Confesion: cual ha sido tu red flag mas clara en una relacion pasada.",
-      "Verdad pesada: que miedo te da mas, fracasar profesionalmente o quedarte solo.",
-      "Castigo: el grupo decide si tu respuesta fue honesta; si no, shot.",
-      "Confesion: cual fue tu momento mas 'no mames que hice eso' en una peda.",
-      "Verdad pesada: que tipo de comentario te duele mas aunque finjas que no.",
-      "Castigo: si te contradices durante la misma respuesta, toma 2 tragos.",
-      "Confesion: que habito tuyo esta arruinando tu economia sin que lo aceptes.",
-      "Verdad pesada: cual fue tu mayor acto de orgullo que te costo una relacion.",
-      "Castigo: si dices 'paso', shot completo sin negociar.",
-      "Confesion: cuando fue la ultima vez que te autosaboteaste y como.",
-      "Verdad pesada: que tan seguido dices 'estoy bien' cuando claramente no lo estas.",
-      "Castigo: si alguien del grupo detecta que evadiste, tomas 2.",
-      "Confesion: que expectativa familiar/social te pesa mas en este momento.",
-      "Verdad pesada: cual fue la ultima vez que pediste ayuda de verdad.",
-      "Castigo: quien tarde mas en responder esta ronda toma 1 extra.",
-      "Confesion: que cosa presumes pero en realidad te cuesta muchisimo sostener.",
-      "Verdad pesada: que aprendiste de tu peor corazon roto, sin chistes.",
-      "Castigo: respuesta menor a 5 palabras cuenta como evasiva, toma 2.",
-      "Confesion: si hoy tuvieras que cerrar un ciclo, cual seria.",
-      "Verdad pesada: que limite personal permitiste que cruzaran por no incomodar.",
-      "Castigo: el grupo vota del 1 al 5 tu honestidad; si sacas menos de 3, shot.",
-      "Confesion: que te da mas ansiedad de cumplir 25+ en Mexico hoy.",
-      "Verdad pesada: cual es la deuda emocional que sigues cargando.",
-      "Castigo: si usas la frase 'es complicado', tomas 1 inmediato.",
-      "Confesion: que consejo das siempre pero tu aun no logras aplicar.",
-      "Verdad pesada: quien crees que te conoce mejor y por que te cuesta mostrarte igual con otros."
+      "Verdad o trago: cual fue la vez que mas te rompieron el ego amoroso.",
+      "Verdad o trago: que parte de tu personalidad escondes para evitar conflicto.",
+      "Verdad o trago: cual ha sido tu peor decision por orgullo.",
+      "Verdad o trago: que miedo real te pega mas al pensar en el futuro.",
+      "Verdad o trago: que promesa personal te has fallado varias veces.",
+      "Verdad o trago: cuando fue la ultima vez que lloraste por estres de escuela o chamba.",
+      "Verdad o trago: que te hubiera gustado escuchar en tu peor semestre.",
+      "Verdad o trago: a quien le debes una disculpa pendiente y por que.",
+      "Verdad o trago: que red flag ajena sigues tolerando por costumbre.",
+      "Verdad o trago: que mentira social dices cuando realmente no quieres salir.",
+      "Verdad o trago: que inseguridad te pega mas en una relacion.",
+      "Verdad o trago: que cosa te hubiera evitado un corazon roto si la aceptabas antes.",
+      "Verdad o trago: cual fue tu peor etapa de desvelo por proyectos y como te pego.",
+      "Verdad o trago: cual ha sido tu deuda mas estresante, dinero, tiempo o emocional.",
+      "Verdad o trago: que parte de tu vida sientes que comparas demasiado en redes.",
+      "Verdad o trago: que cancion te pega duro aunque te hagas el fuerte.",
+      "Verdad o trago: que habito te esta frenando mas de lo que aceptas.",
+      "Verdad o trago: que opinas de ti cuando fallas en algo importante.",
+      "Verdad o trago: que limite personal no has sabido poner.",
+      "Verdad o trago: cual fue tu momento mas 'ya no puedo' y como saliste.",
+      "Verdad o trago: que te da mas miedo, quedarte estancado o elegir mal y perder tiempo.",
+      "Verdad o trago: si pudieras hablar con tu version de primer semestre, que le advertirias.",
+      "Verdad o trago: que esperas realmente de una pareja en esta etapa.",
+      "Verdad o trago: que parte de tu historia casi nadie conoce y te pesa contar."
     ];
+
+    const reglasPorNivel = {
+      1: "Nivel 1: Debate o pregunta ligera. Quien pierda el debate o se trabe, toma 1.",
+      2: "Nivel 2: Persona A lee, Persona B adivina. Si falla B, toma B. Si acierta B, toma A.",
+      3: "Nivel 3: Persona que responde elige: decir la verdad completa o tomar un trago grande."
+    };
 
     const gameData = {
       1: {
-        name: "Precopeo (Tranquilo)",
+        name: "Calentando Motores",
         cards: nuevasPreguntasNivel1
       },
       2: {
-        name: "Entrando en Calor (Intermedio)",
+        name: "Que Tanto Me Conoces",
         cards: nuevasPreguntasNivel2
       },
       3: {
-        name: "Modo Destruccion (Pesado)",
+        name: "Fuego Cruzado",
         cards: nuevasPreguntasNivel3
       }
     };
@@ -480,10 +546,49 @@
     const backBtn = document.getElementById("backBtn");
     const levelChip = document.getElementById("nivel-actual");
     const counterChip = document.getElementById("contador");
+    const modoDescripcion = document.getElementById("modoDescripcion");
+    const playerOneInput = document.getElementById("playerOneInput");
+    const playerTwoInput = document.getElementById("playerTwoInput");
+    const nameHelper = document.getElementById("nameHelper");
+    const turnBanner = document.getElementById("turnBanner");
 
     let selectedLevel = null;
     let turnCount = 0;
     let lastCardIndex = -1;
+    let players = ["Jugador 1", "Jugador 2"];
+    let currentTurnIndex = 0;
+
+    function sanitizeName(value, fallback) {
+      const clean = value.trim().replace(/\s+/g, " ");
+      return clean || fallback;
+    }
+
+    function namesAreReady() {
+      return playerOneInput.value.trim().length > 0 && playerTwoInput.value.trim().length > 0;
+    }
+
+    function updateLevelButtonsState() {
+      const ready = namesAreReady();
+      levelButtons.forEach((btn) => {
+        btn.disabled = !ready;
+      });
+      nameHelper.textContent = ready
+        ? "Niveles desbloqueados. Elijan uno para empezar."
+        : "Escribe ambos nombres para desbloquear niveles.";
+    }
+
+    function nextTurnIndex() {
+      if (turnCount === 1) {
+        return Math.floor(Math.random() * 2);
+      }
+
+      // Alterna casi siempre, pero a veces decide al azar para mantener suspenso.
+      const shouldRandomize = Math.random() < 0.35;
+      if (shouldRandomize) {
+        return Math.floor(Math.random() * 2);
+      }
+      return currentTurnIndex === 0 ? 1 : 0;
+    }
 
     function randomIndex(max, disallow) {
       if (max <= 1) return 0;
@@ -516,21 +621,38 @@
       const idx = randomIndex(levelPack.cards.length, lastCardIndex);
       lastCardIndex = idx;
       turnCount += 1;
+      currentTurnIndex = nextTurnIndex();
       counterChip.textContent = "Reto #" + turnCount;
+      turnBanner.textContent = "Turno de: " + players[currentTurnIndex];
       animateCard(levelPack.cards[idx]);
     }
 
     function startGame(level) {
+      players = [
+        sanitizeName(playerOneInput.value, "Jugador 1"),
+        sanitizeName(playerTwoInput.value, "Jugador 2")
+      ];
       selectedLevel = level;
       turnCount = 0;
       lastCardIndex = -1;
+      currentTurnIndex = Math.floor(Math.random() * 2);
       levelChip.textContent = "Nivel seleccionado: " + gameData[level].name;
+      modoDescripcion.textContent = reglasPorNivel[level];
       setScreen(true);
       nextCard();
     }
 
+    playerOneInput.addEventListener("input", updateLevelButtonsState);
+    playerTwoInput.addEventListener("input", updateLevelButtonsState);
+
     levelButtons.forEach((btn) => {
-      btn.addEventListener("click", () => startGame(btn.dataset.level));
+      btn.addEventListener("click", () => {
+        if (!namesAreReady()) {
+          alert("Primero escriban ambos nombres para jugar.");
+          return;
+        }
+        startGame(btn.dataset.level);
+      });
     });
 
     nextBtn.addEventListener("click", nextCard);
@@ -538,6 +660,8 @@
     backBtn.addEventListener("click", () => {
       setScreen(false);
     });
+
+    updateLevelButtonsState();
   </script>
 </body>
 </html>
